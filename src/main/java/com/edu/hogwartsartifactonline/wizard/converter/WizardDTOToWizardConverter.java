@@ -6,10 +6,12 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 @Component
-public class WizardToWizardDTOConverter implements Converter<Wizard, WizardDTO> {
-
+public class WizardDTOToWizardConverter implements Converter<WizardDTO, Wizard> {
     @Override
-    public WizardDTO convert(Wizard source) {
-        return new WizardDTO(source.getId(), source.getName(), source.numberOfArtifacts());
+    public Wizard convert(WizardDTO source) {
+        Wizard wizard = new Wizard();
+        wizard.setId(source.id());
+        wizard.setName(source.name());
+         return wizard;
     }
 }

@@ -1,4 +1,9 @@
 package com.edu.hogwartsartifactonline.wizard.dto;
 
-public record WizardDTO(Integer id, String name, Integer numberOfArtifacts) {
+import jakarta.validation.constraints.NotEmpty;
+
+public record WizardDTO(Integer id,
+                        @NotEmpty(message = "Can't save a wizard without name.")
+                        String name,
+                        Integer numberOfArtifacts) {
 }
