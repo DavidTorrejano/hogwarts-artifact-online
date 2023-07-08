@@ -13,6 +13,7 @@ public class Wizard implements Serializable {
 
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "owner")
@@ -53,5 +54,10 @@ public class Wizard implements Serializable {
 
     public Integer numberOfArtifacts(){
         return artifacts.size();
+    }
+
+    public void removeAllArtifacts(){
+        artifacts.forEach(artifact -> artifact.setOwner(null));
+        artifacts.clear();
     }
 }

@@ -1,6 +1,7 @@
 package com.edu.hogwartsartifactonline.artifact;
 
 import com.edu.hogwartsartifactonline.artifact.utils.IdWorker;
+import com.edu.hogwartsartifactonline.system.exception.ObjectNotFoundException;
 import com.edu.hogwartsartifactonline.wizard.Wizard;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -104,8 +105,8 @@ class ArtifactServiceTest {
                 ()-> artifactService.findById("1250808601744904192"));
 
         // Then:
-        assertThat(thrown).isInstanceOf(ArtifactNotFoundException.class)
-                .hasMessage("Could not find artifact with Id: 1250808601744904192, we are sorry :/");
+        assertThat(thrown).isInstanceOf(ObjectNotFoundException.class)
+                .hasMessage("Could not find Artifact with Id: 1250808601744904192, we are sorry :/");
 
         Mockito.verify(artifactRepository, times(1)).findById("1250808601744904192");
 
@@ -160,7 +161,7 @@ class ArtifactServiceTest {
         oldArtifact.setImageUrl("image.url");
 
         Artifact update = new Artifact();
-        update.setId("1250808601744904192");
+        //update.setId("1250808601744904192");
         update.setName("Invisibility gloves");
         update.setDescription("You go invisible brr");
         update.setImageUrl("image.url");
@@ -191,7 +192,7 @@ class ArtifactServiceTest {
         given(artifactRepository.findById("1250808601744904192")).willReturn(Optional.empty());
 
         // When
-        assertThrows(ArtifactNotFoundException.class,
+        assertThrows(ObjectNotFoundException.class,
                 ()-> artifactService.update("1250808601744904192", update));
 
         // Then
@@ -225,7 +226,7 @@ class ArtifactServiceTest {
                 .willReturn(Optional.empty());
 
         // When
-        assertThrows(ArtifactNotFoundException.class, () -> {
+        assertThrows(ObjectNotFoundException.class, () -> {
             artifactService.delete("1250808601744904192");
         });
 

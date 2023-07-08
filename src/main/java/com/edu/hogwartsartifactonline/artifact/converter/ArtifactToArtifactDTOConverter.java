@@ -19,9 +19,8 @@ public class ArtifactToArtifactDTOConverter implements Converter<Artifact, Artif
 
     @Override
     public ArtifactDTO convert(Artifact source) {
-        ArtifactDTO artifactDTO = new ArtifactDTO(source.getId(), source.getName(), source.getDescription(),
+        return new ArtifactDTO(source.getId(), source.getName(), source.getDescription(),
                 source.getImageUrl(),
                 source.getOwner() != null? wizardToWizardDTOConverter.convert(source.getOwner()):null);
-        return artifactDTO;
     }
 }
