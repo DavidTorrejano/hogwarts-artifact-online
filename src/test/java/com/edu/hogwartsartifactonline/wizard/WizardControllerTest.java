@@ -233,7 +233,53 @@ class WizardControllerTest {
                 .andExpect(jsonPath("$.message")
                         .value("Could not find Wizard with Id: 1, we are sorry :/"))
                 .andExpect(jsonPath("$.data").isEmpty());
+    }
 
+    @Test
+    void testAssignArtifactSuccess() throws Exception{
+        // Given
+        doNothing().when(wizardService).assignArtifact(2, "1250808601744904192");
+
+        // When and Then
+        mockMvc.perform(MockMvcRequestBuilders.put(baseUrl + "/wizards/2/artifacts/1250808601744904192")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.flag").value(true))
+                .andExpect(jsonPath("$.code").value(StatusCode.SUCCESS))
+                .andExpect(jsonPath("$.message")
+                        .value("Artifact Assignment Success"))
+                .andExpect(jsonPath("$.data").isEmpty());
+    }
+
+    @Test
+    void testAssignArtifactErrorWithNonExistentWizardId() throws Exception{
+        // Given
+        doThrow(new ObjectNotFoundException("Wizard", 2)).when(wizardService)
+                        .assignArtifact(2, "1250808601744904192");
+
+        // When and Then
+        mockMvc.perform(MockMvcRequestBuilders.put(baseUrl + "/wizards/2/artifacts/1250808601744904192")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.flag").value(false))
+                .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
+                .andExpect(jsonPath("$.message")
+                        .value("Could not find Wizard with Id: 2, we are sorry :/"))
+                .andExpect(jsonPath("$.data").isEmpty());
+    }
+
+    @Test
+    void testAssignArtifactErrorWithNonExistentArtifactId() throws Exception{
+        // Given
+        doThrow(new ObjectNotFoundException("Artifact", "1250808601744904192")).when(wizardService)
+                .assignArtifact(2, "1250808601744904192");
+
+        // When and Then
+        mockMvc.perform(MockMvcRequestBuilders.put(baseUrl + "/wizards/2/artifacts/1250808601744904192")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.flag").value(false))
+                .andExpect(jsonPath("$.code").value(StatusCode.NOT_FOUND))
+                .andExpect(jsonPath("$.message")
+                        .value("Could not find Artifact with Id: 1250808601744904192, we are sorry :/"))
+                .andExpect(jsonPath("$.data").isEmpty());
     }
 
 }

@@ -60,4 +60,11 @@ public class Wizard implements Serializable {
         artifacts.forEach(artifact -> artifact.setOwner(null));
         artifacts.clear();
     }
+
+    public void removeArtifact(Artifact artifactToBeAssign) {
+        // Remove artifact owner.
+        artifactToBeAssign.setOwner(null);
+        // Remove the artifact from the list.
+        artifacts.remove(artifactToBeAssign);
+    }
 }
