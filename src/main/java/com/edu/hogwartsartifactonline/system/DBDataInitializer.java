@@ -2,6 +2,8 @@ package com.edu.hogwartsartifactonline.system;
 
 import com.edu.hogwartsartifactonline.artifact.Artifact;
 import com.edu.hogwartsartifactonline.artifact.ArtifactRepository;
+import com.edu.hogwartsartifactonline.hogwartsuser.HogwartsUser;
+import com.edu.hogwartsartifactonline.hogwartsuser.UserRepository;
 import com.edu.hogwartsartifactonline.wizard.Wizard;
 import com.edu.hogwartsartifactonline.wizard.WizardRepository;
 import org.springframework.boot.CommandLineRunner;
@@ -12,10 +14,14 @@ public class DBDataInitializer implements CommandLineRunner {
 
     private final ArtifactRepository artifactRepository;
     private final WizardRepository wizardRepository;
+    private final UserRepository userRepository;
 
-    public DBDataInitializer(ArtifactRepository artifactRepository, WizardRepository wizardRepository) {
+    public DBDataInitializer(ArtifactRepository artifactRepository,
+                             WizardRepository wizardRepository,
+                             UserRepository userRepository) {
         this.artifactRepository = artifactRepository;
         this.wizardRepository = wizardRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -74,9 +80,35 @@ public class DBDataInitializer implements CommandLineRunner {
         w3.setName("Neville Longbottom");
         w3.addArtifact(a5);
 
+        HogwartsUser u1 = new HogwartsUser();
+        u1.setId(1);
+        u1.setUsername("John");
+        u1.setPassword("12345");
+        u1.setEnabled(true);
+        u1.setRoles("user");
+
+        HogwartsUser u2 = new HogwartsUser();
+        u2.setId(2);
+        u2.setUsername("Javier");
+        u2.setPassword("abcdf");
+        u2.setEnabled(true);
+        u2.setRoles("user");
+
+        HogwartsUser u3 = new HogwartsUser();
+        u3.setId(3);
+        u3.setUsername("Adrien");
+        u3.setPassword("qwerty");
+        u3.setEnabled(false);
+        u3.setRoles("user");
+
+
         wizardRepository.save(w1);
         wizardRepository.save(w2);
         wizardRepository.save(w3);
+
+        userRepository.save(u1);
+        userRepository.save(u2);
+        userRepository.save(u3);
 
         artifactRepository.save(a6);
 
