@@ -3,19 +3,25 @@ package com.edu.hogwartsartifactonline.hogwartsuser;
 
 import com.edu.hogwartsartifactonline.system.exception.ObjectNotFoundException;
 import jakarta.transaction.Transactional;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
-public class UserService {
+public class UserService implements UserDetailsService {
 
-    UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository,
+                       PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<HogwartsUser> findAll(){
@@ -23,6 +29,8 @@ public class UserService {
     }
 
     public HogwartsUser save(HogwartsUser newUser){
+        // We need to encode plain text password before saving to the DB TODO
+        newUser.setPassword(passwordEncoder.encode(newUser.getPassword()));
         return userRepository.save(newUser);
     }
 
@@ -47,6 +55,13 @@ public class UserService {
         HogwartsUser userToBeDeleted = userRepository.findById(userId)
                 .orElseThrow(() -> new ObjectNotFoundException("User", userId));
         userRepository.deleteById(userToBeDeleted.getId());
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return userRepository.findByUsername(username)
+                .map(hogwartsUser -> new MyUserPrincipal(hogwartsUser))
+                .orElseThrow(() -> new UsernameNotFoundException("username " + username + " is not found"));
     }
 
 }
